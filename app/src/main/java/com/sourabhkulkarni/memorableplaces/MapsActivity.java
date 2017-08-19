@@ -3,6 +3,7 @@ package com.sourabhkulkarni.memorableplaces;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -192,6 +194,30 @@ if(listaddresses!=null&&listaddresses.size()>0){
         MainActivity.locations.add(latLng);
 
         MainActivity.arrayAdapter.notifyDataSetChanged();
+        SharedPreferences sharedPreferences=this.getSharedPreferences("com.sourabhkulkarni.memorableplaces",Context.MODE_PRIVATE);
+        try {
+            sharedPreferences.edit().putString("places",ObjectSerializer.serialize(MainActivity.places)).apply();
+            ArrayList<String> latitutes=new ArrayList<>();
+            ArrayList<String> longitudes=new ArrayList<>();
+            for(LatLng coordinates:MainActivity.locations){
+
+                latitutes.add(Double.toString(coordinates.latitude));
+                longitudes.add(Double.toString(coordinates.longitude));
+
+            }
+            sharedPreferences.edit().putString("places",ObjectSerializer.serialize(MainActivity.places)).apply();
+            sharedPreferences.edit().putString("latitute",ObjectSerializer.serialize(latitutes)).apply();
+            sharedPreferences.edit().putString("latitude",ObjectSerializer.serialize(longitudes)).apply();
+
+
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         Toast.makeText(this, "Location saved",Toast.LENGTH_LONG).show();
 
 
